@@ -107,19 +107,19 @@
     </link>
 
     <joint name="chassis_to_boggie_${postfix}" type="revolute">
-        <axis xyz="1 0 0"/>
+        <axis xyz="${reflect*-1} 0 0"/>
         <limit effort="1000.0" lower="-0.523599" upper="0.523599" velocity="50"/>
-        <origin rpy="0 0 ${reflect*-1.57}" xyz="0 ${reflect*0.3} 0"/>
+        <origin rpy="0 0 ${reflect*1.57}" xyz="-1.45758E-03 ${reflect*-201.552E-03} -19.8088E-03"/>
         <parent link="chassis"/>
         <child link="boggie_${postfix}"/>
     </joint>
 </xacro:macro>
-<xacro:boggie postfix="right" reflect="-1" />
-<xacro:boggie postfix="left" reflect="1" />
+<xacro:boggie postfix="right" reflect="1"/>
+<xacro:boggie postfix="left" reflect="-1"/>
 <!-- end boggies -->
 
 <!-- wheels -->
-<xacro:macro name="wheel" params="side boggie reflect upsidedown">
+<xacro:macro name="wheel" params="side boggie reflect across rotation">
     <link name="wheel_axis_${side}_${boggie}">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -154,23 +154,23 @@
         <xacro:wheel_inertial mass="1.0"/>
     </link>
 
-    <joint name="wheel_to_wheel_axis_${side}_${boggie}" type="fixed">
-        <origin rpy="0 0 ${reflect*3.14}" xyz="0 ${reflect*upsidedown*0.2} 0"/>
+    <joint name="boggie_${boggie}_to_wheel_axis_${side}_${boggie}" type="fixed">
+        <origin rpy="${reflect*across*-0.785398} 0 ${reflect*across*-3.14}" xyz="${reflect*-40.000E-03} ${across*-290.414E-03} -70.2315E-03"/>
         <parent link="boggie_${boggie}"/>
         <child link="wheel_axis_${side}_${boggie}"/>
     </joint>
 
-    <joint name="wheel_axis_to_wheel_holder_${side}_${boggie}" type="continuous">
-        <axis xyz="1 0 0"/>
+    <joint name="wheel_axis_${side}_${boggie}_to_wheel_${side}_${boggie}" type="continuous">
+        <axis xyz="${rotation} 0 0"/>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <parent link="wheel_axis_${side}_${boggie}"/>
         <child link="wheel_${side}_${boggie}"/>
     </joint>
 </xacro:macro>
-<xacro:wheel side="front" boggie="left" reflect="1" upsidedown="1" />
-<xacro:wheel side="front" boggie="right" reflect="-1" upsidedown="1" />
-<xacro:wheel side="back" boggie="left" reflect="1" upsidedown="-1" />
-<xacro:wheel side="back" boggie="right" reflect="-1" upsidedown="-1" />
+<xacro:wheel side="front" boggie="left" across="-1" reflect="1" rotation="1"/>
+<xacro:wheel side="front" boggie="right" across="1" reflect="1" rotation="-1"/>
+<xacro:wheel side="back" boggie="left" across="1" reflect="1" rotation="1"/>
+<xacro:wheel side="back" boggie="right" across="-1" reflect="1" rotation="-1"/>
 <!-- end wheels -->
 
 </robot>
