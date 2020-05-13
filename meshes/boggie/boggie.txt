@@ -1,0 +1,36 @@
+boggie
+Component Instances (1)
+Area	4.254E+05 mm^2
+Density	0.008 g / mm^3
+Mass	5296.569 g
+Volume	6.747E+05 mm^3
+Physical Material	Steel
+
+Bounding Box
+	Length 	 639.669 mm
+	Width 	 71.746 mm
+	Height 	 335.892 mm
+World X,Y,Z	491.38 mm, -100.00 mm, -2.251 mm
+Center of Mass	250.40 mm, -94.376 mm, 20.836 mm
+
+Moment of Inertia at Center of Mass   (g mm^2)
+	Ixx = 1.327E+07
+	Ixy = -1.417E+04
+	Ixz = -4.374E+05
+	Iyx = -1.417E+04
+	Iyy = 2.052E+08
+	Iyz = -1.830E+06
+	Izx = -4.374E+05
+	Izy = -1.830E+06
+	Izz = 1.947E+08
+
+Moment of Inertia at Origin   (g mm^2)
+	Ixx = 6.275E+07
+	Ixy = 1.252E+08
+	Ixz = -2.807E+07
+	Iyx = 1.252E+08
+	Iyy = 5.396E+08
+	Iyz = 8.585E+06
+	Izx = -2.807E+07
+	Izy = 8.585E+06
+	Izz = 5.740E+08
