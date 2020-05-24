@@ -2,20 +2,39 @@
 <robot name="jimmbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 <xacro:include filename="$(find jimmbot_description)/urdf/materials.xacro" />
-<xacro:include filename="$(find jimmbot_description)/urdf/jimmbot.trans" />
-<xacro:include filename="$(find jimmbot_description)/urdf/jimmbot.gazebo" />
 
 <!-- Inertial matrixes -->
-<xacro:macro name="chassis_inertial" params="mass">
+<xacro:macro name="zero_inertial" params="mass">
   <inertial>
     <mass value="${mass}"/>
     <inertia 
+              ixx="1" 
+              ixy="1" 
+              ixz="1" 
+              iyy="1" 
+              iyz="1" 
+              izz="1" />
+  </inertial>
+</xacro:macro>
+
+<xacro:macro name="chassis_inertial" params="mass">
+  <inertial>
+    <mass value="${mass}"/>
+    <!-- <inertia 
               ixx="6.994E+08" 
               ixy="3.083E+05" 
               ixz="-2.746E+05" 
               iyy="1.202E+09" 
               iyz="-6.256E+05" 
               izz="1.446E+09" />
+  </inertial> -->
+  <inertia 
+              ixx="5.78216276846" 
+              ixy="0" 
+              ixz="0" 
+              iyy="10.4480713745" 
+              iyz="0" 
+              izz="12.8806369068" />
   </inertial>
 </xacro:macro>
 
@@ -57,6 +76,19 @@
               izz="5.309E+07" />
   </inertial>
 </xacro:macro>
+
+<xacro:macro name="differential_inertial" params="mass">
+  <inertial>
+    <mass value="${mass}"/>
+    <inertia 
+              ixx="9.420E+04" 
+              ixy="-1.785E-10" 
+              ixz="-2.393E-06" 
+              iyy="5.077E+06" 
+              iyz="0.00" 
+              izz="5.039E+06" />
+  </inertial>
+</xacro:macro>
 <!-- end Inertial matrixes -->
 
 <!-- dummy base_link -->
@@ -84,11 +116,17 @@
     </geometry>
   </collision>
   <xacro:chassis_inertial mass="40.0"/>
+  <!-- <xacro:zero_inertial mass="40"/> -->
 </link>
 <!-- end chassis -->
 
 <!-- boggies -->
 <xacro:macro name="boggie" params="postfix reflect">
+
+    <link name="boggie_${postfix}_front_rods" />
+
+    <link name="boggie_${postfix}_back_rods" />
+
     <link name="boggie_${postfix}">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -103,8 +141,21 @@
                 <mesh filename="package://jimmbot_description/meshes/boggie/boggie.stl" scale="0.001 0.001 0.001"/>
             </geometry>
         </collision>
-        <xacro:boggie_inertial mass="6.0"/>
+        <!-- <xacro:boggie_inertial mass="6.0"/> -->
+        <xacro:zero_inertial mass="6.0"/>
     </link>
+
+    <joint name="boggie_${postfix}_front_rods_to_boggie_${postfix}" type="fixed">
+        <origin rpy="0 0 0" xyz="9E-03 -2.5E-03 200E-03"/>
+        <parent link="boggie_${postfix}"/>
+        <child link="boggie_${postfix}_front_rods"/>
+    </joint>
+
+    <joint name="boggie_${postfix}_back_rods_to_boggie_${postfix}" type="fixed">
+        <origin rpy="0 0 0" xyz="9E-03 -2.5E-03 220E-03"/>
+        <parent link="boggie_${postfix}"/>
+        <child link="boggie_${postfix}_back_rods"/>
+    </joint>
 
     <joint name="chassis_to_boggie_${postfix}" type="revolute">
         <axis xyz="${reflect*-1} 0 0"/>
@@ -117,6 +168,115 @@
 <xacro:boggie postfix="right" reflect="1"/>
 <xacro:boggie postfix="left" reflect="-1"/>
 <!-- end boggies -->
+
+<!-- differential -->
+<xacro:macro name="differential" params="postfix reflect">
+
+    <link name="differential_left_${postfix}" />
+
+    <link name="differential_right_${postfix}" />
+
+    <link name="differential_${postfix}">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://jimmbot_description/meshes/differential/differential.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://jimmbot_description/meshes/differential/differential.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+        <!-- <xacro:differential_inertial mass="0.8"/> -->
+        <xacro:zero_inertial mass="0.8"/>
+    </link>
+
+    <joint name="differential_${postfix}_to_differential_left_${postfix}" type="fixed">
+        <origin rpy="0 0 0" xyz="120E-03 0 0"/>
+        <parent link="differential_${postfix}"/>
+        <child link="differential_left_${postfix}"/>
+    </joint>
+
+    <joint name="differential_${postfix}_to_differential_right_${postfix}" type="fixed">
+        <origin rpy="0 0 0" xyz="-120E-03 0 0"/>
+        <parent link="differential_${postfix}"/>
+        <child link="differential_right_${postfix}"/>
+    </joint>
+
+    <joint name="chassis_to_differential_${postfix}" type="revolute">
+        <axis xyz="0 0 -1"/>
+        <limit effort="1000.0" lower="-0.523599" upper="0.523599" velocity="50"/>
+        <origin rpy="0 0 ${reflect*1.57}" xyz="${reflect*147.5E-03} 0 147.0E-03"/>
+        <parent link="chassis"/>
+        <child link="differential_${postfix}"/>
+    </joint>
+</xacro:macro>
+<xacro:differential postfix="front" reflect="1"/>
+<xacro:differential postfix="back" reflect="-1"/>
+<!-- end differential -->
+
+<!-- differential_rod -->
+<xacro:macro name="differential_rod" params="postfix boggie reflect">
+
+    <link name="differential_rod_differential_${postfix}_${boggie}" />
+
+    <link name="differential_rod_boggie_${postfix}_${boggie}" />
+    
+    <!-- <link name="differential_rod_${postfix}_${boggie}">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://jimmbot_description/meshes/differential/differential_rod.stl" scale="0.01 0.01 0.01"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://jimmbot_description/meshes/differential/differential_rod.stl" scale="0.01 0.01 0.01"/>
+            </geometry>
+        </collision>
+        <xacro:differential_inertial mass="0.8"/>
+    </link> -->
+
+    <!-- <joint name="differential_rod_${postfix}_${boggie}_to_differential_rod_boggie_${postfix}_${boggie}" type="fixed">
+        <origin rpy="0 0 0" xyz="-82E-03 0 0"/>
+        <parent link="differential_rod_${postfix}_${boggie}"/>
+        <child link="differential_rod_boggie_${postfix}_${boggie}"/>
+    </joint>
+
+    <joint name="differential_rod_${postfix}_${boggie}_to_differential_rod_differential_${postfix}_${boggie}" type="fixed">
+        <origin rpy="0 0 0" xyz="82E-03 0 0"/>
+        <parent link="differential_rod_differential_${postfix}_${boggie}"/>
+        <child link="differential_rod_${postfix}_${boggie}"/>
+    </joint> -->
+
+    <joint name="differential_rod_boggie_${postfix}_${boggie}_to_boggie_${boggie}" type="continuous">
+        <origin rpy="0 0.087266 ${reflect*-0.453786}" xyz="${reflect*0} 0 50E-03"/>
+        <parent link="boggie_${boggie}_${postfix}_rods"/>
+        <child link="differential_rod_boggie_${postfix}_${boggie}"/>
+    </joint>
+
+    <joint name="differential_rod_differential_${postfix}_${boggie}_to_differential_${boggie}_${postfix}" type="continuous">
+        <origin rpy="0 0.087266 ${reflect*0.453786}" xyz="${reflect*0} 0 50E-03"/>
+        <parent link="differential_${boggie}_${postfix}"/>
+        <child link="differential_rod_differential_${postfix}_${boggie}"/>
+    </joint>
+
+    <!-- <joint name="differential_rod_boggie_${postfix}_${boggie}_to_differential_rod_differential_${postfix}_${boggie}" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <parent link="differential_rod_differential_${postfix}_${boggie}"/>
+        <child link="differential_rod_boggie_${postfix}_${boggie}"/>
+    </joint> -->
+</xacro:macro>
+<xacro:differential_rod postfix="front" boggie="right" reflect="1"/>
+<xacro:differential_rod postfix="front" boggie="left" reflect="-1"/>
+<xacro:differential_rod postfix="back" boggie="right" reflect="1"/>
+<!-- <xacro:differential_rod postfix="front" boggie="left" reflect="-1"/> -->
+<!-- end differential_rod -->
 
 <!-- wheels -->
 <xacro:macro name="wheel" params="side boggie reflect across rotation">
@@ -134,7 +294,8 @@
                 <mesh filename="package://jimmbot_description/meshes/wheel/wheel_axis.stl" scale="0.001 0.001 0.001"/>
             </geometry>
         </collision>
-        <xacro:wheel_axis_inertial mass="0.039"/>
+        <!-- <xacro:wheel_axis_inertial mass="0.039"/> -->
+        <xacro:zero_inertial mass="0.039"/>
     </link>
 
     <link name="wheel_${side}_${boggie}">
@@ -151,7 +312,8 @@
                 <mesh filename="package://jimmbot_description/meshes/wheel/wheel.stl" scale="0.001 0.001 0.001"/>
             </geometry>
         </collision>
-        <xacro:wheel_inertial mass="1.0"/>
+        <!-- <xacro:wheel_inertial mass="1.0"/> -->
+        <xacro:zero_inertial mass="1.0"/>
     </link>
 
     <joint name="boggie_${boggie}_to_wheel_axis_${side}_${boggie}" type="fixed">
@@ -166,11 +328,35 @@
         <parent link="wheel_axis_${side}_${boggie}"/>
         <child link="wheel_${side}_${boggie}"/>
     </joint>
+
+    <!-- diff_drive todo -->
+    <transmission name="wheel_axis_${side}_${boggie}_to_wheel_${side}_${boggie}_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <actuator name="wheel_axis_${side}_${boggie}_to_wheel_${side}_${boggie}_motor">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+        <joint name="wheel_axis_${side}_${boggie}_to_wheel_${side}_${boggie}">
+            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        </joint>
+    </transmission>
+
 </xacro:macro>
 <xacro:wheel side="front" boggie="left" across="-1" reflect="1" rotation="1"/>
 <xacro:wheel side="front" boggie="right" across="1" reflect="1" rotation="-1"/>
 <xacro:wheel side="back" boggie="left" across="1" reflect="1" rotation="1"/>
 <xacro:wheel side="back" boggie="right" across="-1" reflect="1" rotation="-1"/>
 <!-- end wheels -->
+
+<!-- ros_control plugin
+todo, when enabling this, it lags because it publishes from joint state publisher to,
+in order to work, when in simulation, this needs to be on, and when in real hardware
+this turn off, and implemented hardware interface read() and write() functions, will publish speeds from real hardware
+-->
+<gazebo>
+  <plugin name="gazebo_ros_control" filename= "libgazebo_ros_control.so">
+   <robotNamespace>/</robotNamespace>
+  </plugin>
+</gazebo>
 
 </robot>

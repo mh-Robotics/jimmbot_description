@@ -99,6 +99,59 @@
     <child link="boggie_left"/>
   </joint>
   <!-- end boggies -->
+  <link name="differential_front">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/differential/differential.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="silver"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/differential/differential.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.8"/>
+      <inertia ixx="9.420E+04" ixy="-1.785E-10" ixz="-2.393E-06" iyy="5.077E+06" iyz="0.00" izz="5.039E+06"/>
+    </inertial>
+  </link>
+  <joint name="chassis_to_differential_front" type="revolute">
+    <axis xyz="0 0 -1"/>
+    <limit effort="1000.0" lower="-0.523599" upper="0.523599" velocity="50"/>
+    <origin rpy="0 0 1.57" xyz="0.1475 0 147.0E-03"/>
+    <parent link="chassis"/>
+    <child link="differential_front"/>
+  </joint>
+  <link name="differential_back">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/differential/differential.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="silver"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/differential/differential.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.8"/>
+      <inertia ixx="9.420E+04" ixy="-1.785E-10" ixz="-2.393E-06" iyy="5.077E+06" iyz="0.00" izz="5.039E+06"/>
+    </inertial>
+  </link>
+  <joint name="chassis_to_differential_back" type="revolute">
+    <axis xyz="0 0 -1"/>
+    <limit effort="1000.0" lower="-0.523599" upper="0.523599" velocity="50"/>
+    <origin rpy="0 0 -1.57" xyz="-0.1475 0 147.0E-03"/>
+    <parent link="chassis"/>
+    <child link="differential_back"/>
+  </joint>
+  <!-- end differential -->
   <link name="wheel_axis_front_left">
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>

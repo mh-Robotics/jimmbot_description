@@ -1,0 +1,36 @@
+differential_bar
+Component Instances (1)
+Area	2.493E+04 mm^2
+Density	0.008 g / mm^3
+Mass	886.677 g
+Volume	1.130E+05 mm^3
+Physical Material	Steel
+
+Bounding Box
+	Length 	 260.00 mm
+	Width 	 20.00 mm
+	Height 	 65.00 mm
+World X,Y,Z	0.00 mm, 500.00 mm, 0.00 mm
+Center of Mass	0.00 mm, 500.00 mm, -0.341 mm
+
+Moment of Inertia at Center of Mass   (g mm^2)
+	Ixx = 9.420E+04
+	Ixy = -1.785E-10
+	Ixz = -2.393E-06
+	Iyx = -1.785E-10
+	Iyy = 5.077E+06
+	Iyz = 0.00
+	Izx = -2.393E-06
+	Izy = 0.00
+	Izz = 5.039E+06
+
+Moment of Inertia at Origin   (g mm^2)
+	Ixx = 2.218E+08
+	Ixy = 2.066E-05
+	Ixz = -2.407E-06
+	Iyx = 2.066E-05
+	Iyy = 5.077E+06
+	Iyz = 1.512E+05
+	Izx = -2.407E-06
+	Izy = 1.512E+05
+	Izz = 2.267E+08
