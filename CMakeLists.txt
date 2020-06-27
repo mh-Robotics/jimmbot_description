@@ -3,9 +3,7 @@ project(jimmbot_description)
 
 add_compile_options(-std=c++11)
 
-find_package(catkin REQUIRED COMPONENTS
-  roslaunch
-)
+find_package(catkin REQUIRED COMPONENTS roslaunch)
 
 catkin_package()
 
