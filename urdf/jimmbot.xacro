@@ -43,6 +43,32 @@
   </inertial>
 </xacro:macro>
 
+<xacro:macro name="lidar_inertial_base" params="mass">
+  <inertial>
+    <mass value="${mass}"/>
+    <inertia 
+      ixx="6.7885E-05"
+      ixy="-1.3987E-07"
+      ixz="-8.1554E-07"
+      iyy="0.00013173"
+      iyz="-9.0932E-08"
+      izz="7.1972E-05" />
+  </inertial>
+</xacro:macro>
+
+<xacro:macro name="lidar_inertial_frame" params="mass">
+  <inertial>
+    <mass value="${mass}"/>
+    <inertia 
+      ixx="8.9194E-05"
+      ixy="1.8116E-07"
+      ixz="3.6435E-08"
+      iyy="0.00018279"
+      iyz="2.423E-07"
+      izz="0.00011103" />
+  </inertial>
+</xacro:macro>
+
 <xacro:macro name="wheel_axis_inertial" params="mass">
   <inertial>
     <mass value="${mass}"/>
@@ -123,6 +149,218 @@
   <xacro:chassis_inertial mass="40.0"/>
 </link>
 <!-- end chassis -->
+
+<!-- imu -->
+<xacro:macro name="imu">
+
+    <link name="imu_base">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="0.1 0.1 0.1" />
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="0.01 0.2 0.01" />
+            </geometry>
+        </collision>
+        <xacro:lidar_inertial_base mass="0.15717"/>
+    </link>
+
+    <gazebo reference="imu_base">
+      <gravity>true</gravity>
+      <sensor name="imu_sensor" type="imu">
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>
+        <visualize>true</visualize>
+        <topic>__default_topic__</topic>
+        <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+          <topicName>imu</topicName>
+          <bodyName>imu_base</bodyName>
+          <updateRateHZ>10.0</updateRateHZ>
+          <gaussianNoise>0.0</gaussianNoise>
+          <xyzOffset>0 0 0</xyzOffset>
+          <rpyOffset>0 0 0</rpyOffset>
+          <frameName>imu_base</frameName>
+          <initialOrientationAsReference>false</initialOrientationAsReference>
+        </plugin>
+        <pose>0 0 0 0 0 0</pose>
+      </sensor>
+    </gazebo>
+
+    <joint name="chassis_to_imu" type="fixed">
+        <axis xyz="0 0 0"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <parent link="chassis"/>
+        <child link="imu_base"/>
+    </joint>
+</xacro:macro>
+<xacro:imu />
+<!-- end imu -->
+
+<!-- lidar -->
+<xacro:macro name="lidar">
+
+    <link name="lidar_base">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://jimmbot_description/meshes/ydlidar/ydlidar.dae" />
+            </geometry>
+            <material name="lidar"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://jimmbot_description/meshes/ydlidar/ydlidar.dae" />
+            </geometry>
+        </collision>
+        <xacro:lidar_inertial_base mass="0.15717"/>
+    </link>
+
+    <link name="lidar_frame">
+        <xacro:lidar_inertial_frame mass="0.25482"/>
+    </link>
+
+    <joint name="laser_joint" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0.03172" />
+        <parent link="lidar_base" />
+        <child link="lidar_frame" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+    <gazebo reference="imu_base">
+      <gravity>true</gravity>
+      <sensor type="ray" name="sensor">
+
+        <!-- Enable visualization to see the rays in the GUI -->
+        <visualize>true</visualize>
+
+        <!-- Set the update rate of the sensor -->
+        <update_rate>10</update_rate>
+
+        <ray>
+
+          <!-- The scan element contains the horizontal and vertical beams.
+              We are leaving out the vertical beams for this tutorial. -->
+          <scan>
+
+            <!-- The horizontal beams -->
+            <horizontal>
+              <!-- The velodyne has 32 beams(samples) -->
+              <samples>360</samples>
+
+              <!-- Resolution is multiplied by samples to determine number of
+                  simulated beams vs interpolated beams. See:
+                  http://sdformat.org/spec?ver=1.6&elem=sensor#horizontal_resolution
+                  -->
+              <resolution>1</resolution>
+
+              <!-- Minimum angle in radians -->
+              <min_angle>-6.28319</min_angle>
+
+              <!-- Maximum angle in radians -->
+              <max_angle>6.28319</max_angle>
+            </horizontal>
+          </scan>
+
+          <!-- Range defines characteristics of an individual beam -->
+          <range>
+
+            <!-- Minimum distance of the beam -->
+            <min>0.05</min>
+
+            <!-- Maximum distance of the beam -->
+            <max>15</max>
+
+            <!-- Linear resolution of the beam -->
+            <resolution>0.02</resolution>
+          </range>
+        </ray>
+      </sensor>
+    </gazebo>
+
+    <joint name="chassis_to_lidar" type="fixed">
+        <axis xyz="0 0 0"/>
+        <origin rpy="0 0 0" xyz="0 0 0.15"/>
+        <parent link="chassis"/>
+        <child link="lidar_base"/>
+    </joint>
+</xacro:macro>
+<xacro:lidar />
+<!-- end lidar -->
+
+<!-- kinect -->
+<xacro:macro name="kinect" params="postfix reflect">
+
+    <link name="kinect_${postfix}">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://jimmbot_description/meshes/kinect/kinect.dae" />
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <!-- <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://jimmbot_description/meshes/boggie/boggie.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision> -->
+        <!-- <xacro:kinect_inertial mass="6.0"/> -->
+    </link>
+
+    <gazebo reference="kinect_${postfix}">
+      <sensor type="depth" name="${postfix}">
+        <always_on>true</always_on>
+        <update_rate>20.0</update_rate>
+        <camera>
+          <horizontal_fov>${60.0*3.14/180.0}</horizontal_fov>
+          <image>
+            <format>R8G8B8</format>
+            <width>640</width>
+            <height>480</height>
+          </image>
+          <clip>
+            <near>0.05</near>
+            <far>8.0</far>
+          </clip>
+        </camera>
+        <plugin name="kinect_${postfix}_controller" filename="libgazebo_ros_openni_kinect.so">
+          <cameraName>${postfix}</cameraName>
+          <alwaysOn>true</alwaysOn>
+          <updateRate>10</updateRate>
+          <imageTopicName>rgb/image_raw</imageTopicName>
+          <depthImageTopicName>depth/image_raw</depthImageTopicName>
+          <pointCloudTopicName>depth/points</pointCloudTopicName>
+          <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
+          <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
+          <frameName>kinect_${postfix}</frameName>
+          <baseline>0.1</baseline>
+          <distortion_k1>0.0</distortion_k1>
+          <distortion_k2>0.0</distortion_k2>
+          <distortion_k3>0.0</distortion_k3>
+          <distortion_t1>0.0</distortion_t1>
+          <distortion_t2>0.0</distortion_t2>
+          <pointCloudCutoff>0.4</pointCloudCutoff>
+          <robotNamespace>/</robotNamespace>
+        </plugin>
+      </sensor>
+    </gazebo>
+
+    <joint name="chassis_to_kinect_${postfix}" type="fixed">
+        <axis xyz="${reflect*-1} 0 0"/>
+        <origin rpy="0.523599 0 ${reflect*1.57}" xyz="${reflect*0.25} 0 0.11"/>
+        <parent link="chassis"/>
+        <child link="kinect_${postfix}"/>
+    </joint>
+</xacro:macro>
+<xacro:kinect postfix="front" reflect="1"/>
+<xacro:kinect postfix="back" reflect="-1"/>
+<!-- end kinect -->
 
 <!-- boggies -->
 <xacro:macro name="boggie" params="postfix reflect">
@@ -335,10 +573,10 @@ todo, when enabling this, it lags because it publishes from joint state publishe
 in order to work, when in simulation, this needs to be on, and when in real hardware
 this turn off, and implemented hardware interface read() and write() functions, will publish speeds from real hardware
 -->
-<gazebo>
+<!-- <gazebo>
   <plugin name="gazebo_ros_control" filename= "libgazebo_ros_control.so">
    <robotNamespace>/</robotNamespace>
   </plugin>
-</gazebo>
+</gazebo> -->
 
 </robot>
