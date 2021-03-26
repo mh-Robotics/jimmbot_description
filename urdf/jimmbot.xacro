@@ -276,7 +276,7 @@
 
 <!-- kinect -->
 <xacro:macro name="kinect" params="postfix reflect">
-    <link name="kinect_${postfix}">
+    <link name="kinect_${postfix}_link">
         <visual>
             <origin rpy="0 0 1.57" xyz="0 0 0"/>
             <geometry>
@@ -295,13 +295,13 @@
 
     <joint name="kinect_${postfix}_optical_joint" type="fixed">
         <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/>
-        <parent link="kinect_${postfix}"/>
+        <parent link="kinect_${postfix}_link"/>
         <child link="kinect_${postfix}_optical"/>
     </joint>
     <link name="kinect_${postfix}_optical"/>
 
     <!-- Transfer to gazebo xacro -->
-    <gazebo reference="kinect_${postfix}">
+    <gazebo reference="kinect_${postfix}_link">
       <sensor type="depth" name="${postfix}">
         <always_on>true</always_on>
         <update_rate>20.0</update_rate>
@@ -339,10 +339,10 @@
       </sensor>
     </gazebo>
 
-    <joint name="chassis_to_kinect_${postfix}" type="fixed">
+    <joint name="chassis_to_kinect_${postfix}_link" type="fixed">
         <origin rpy="0 0.523599 ${reflect*1.5708-1.5708}" xyz="${reflect*0.25} 0 0.11"/>
         <parent link="chassis"/>
-        <child link="kinect_${postfix}"/>
+        <child link="kinect_${postfix}_link"/>
     </joint>
 </xacro:macro>
 <xacro:kinect postfix="front" reflect="1"/>
