@@ -26,6 +26,6 @@ SOFTWARE.
  -->
 <launch>
 
-  <param name="robot_description" command="$(find xacro)/xacro '$(find jimmbot_description)/urdf/jimmbot.xacro'" />
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find jimmbot_description)/urdf/jimmbot.xacro'" />
 
 </launch>
