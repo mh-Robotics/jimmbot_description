@@ -1,0 +1,35 @@
+Bodies (1)
+Area 3.951E+04 mm^2
+Density 8.940E-04 g / mm^3
+Mass 377.086 g
+Volume 4.218E+05 mm^3
+Physical Material Polyethylene, Low Density
+Appearance Surface - Matte
+
+Bounding Box
+Length 100.00 mm
+Width 100.00 mm
+Height 66.00 mm
+Center of Mass 0.04 mm, 0.00 mm, 27.44 mm
+
+Moment of Inertia at Center of Mass   (g mm^2)
+Ixx = 3.345E+05
+Ixy = 0.00
+Ixz = -129.675
+Iyx = 0.00
+Iyy = 3.351E+05
+Iyz = 0.00
+Izx = -129.675
+Izy = 0.00
+Izz = 3.884E+05
+
+Moment of Inertia at Origin   (g mm^2)
+Ixx = 6.184E+05
+Ixy = 0.00
+Ixz = -542.059
+Iyx = 0.00
+Iyy = 6.190E+05
+Iyz = 0.00
+Izx = -542.059
+Izy = 0.00
+Izz = 3.884E+05

@@ -1,129 +1,8 @@
 <?xml version="1.0" ?>
 <robot name="jimmbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<xacro:include filename="$(find jimmbot_description)/urdf/materials.xacro" />
-<!-- <xacro:include filename="$(find jimmbot_description)/urdf/gazebo.xacro" /> -->
-
-<!-- Inertial matrixes -->
-<xacro:macro name="zero_inertial" params="mass">
-  <inertial>
-    <mass value="${mass}"/>
-    <inertia 
-      ixx="0.000001" 
-      ixy="0" 
-      ixz="0" 
-      iyy="0.000001" 
-      iyz="0" 
-      izz="0.000001" />
-  </inertial>
-</xacro:macro>
-
-<xacro:macro name="chassis_inertial" params="mass">
-  <inertial>
-    <mass value="${mass}"/>
-    <inertia 
-      ixx="0.578216276846" 
-      ixy="0" 
-      ixz="0" 
-      iyy="1.04480713745" 
-      iyz="0" 
-      izz="1.28806369068" />
-    </inertial>
-</xacro:macro>
-
-<xacro:macro name="boggie_inertial" params="mass">
-  <inertial>
-    <origin rpy="0 0 0" xyz="0.01 0 0"/>
-    <mass value="${mass}"/>
-    <inertia 
-      ixx="0.260999632051" 
-      ixy="0" 
-      ixz="0" 
-      iyy="0.0589854292796" 
-      iyz="0" 
-      izz="0.207161688318" />
-  </inertial>
-</xacro:macro>
-
-<xacro:macro name="lidar_inertial_base" params="mass">
-  <inertial>
-    <mass value="${mass}"/>
-    <inertia 
-      ixx="6.7885E-05"
-      ixy="-1.3987E-07"
-      ixz="-8.1554E-07"
-      iyy="0.00013173"
-      iyz="-9.0932E-08"
-      izz="7.1972E-05" />
-  </inertial>
-</xacro:macro>
-
-<xacro:macro name="lidar_inertial_frame" params="mass">
-  <inertial>
-    <mass value="${mass}"/>
-    <inertia 
-      ixx="8.9194E-05"
-      ixy="1.8116E-07"
-      ixz="3.6435E-08"
-      iyy="0.00018279"
-      iyz="2.423E-07"
-      izz="0.00011103" />
-  </inertial>
-</xacro:macro>
-
-<xacro:macro name="wheel_axis_inertial" params="mass">
-  <inertial>
-    <mass value="${mass}"/>
-    <inertia 
-      ixx="1.664e-06" 
-      ixy="0" 
-      ixz="0" 
-      iyy="4.0157e-05" 
-      iyz="0" 
-      izz="4.0157e-05" />
-  </inertial>
-</xacro:macro>
-
-<xacro:macro name="wheel_inertial" params="mass">
-  <inertial>
-    <origin rpy="0 0 0" xyz="0.03 0 0"/>
-    <mass value="${mass}"/>
-    <inertia 
-      ixx="0.007139697375" 
-      ixy="0" 
-      ixz="0" 
-      iyy="0.004079848688" 
-      iyz="0" 
-      izz="0.004079848688" />
-  </inertial>
-</xacro:macro>
-
-<xacro:macro name="differential_inertial" params="mass">
-  <inertial>
-    <mass value="${mass}"/>
-    <inertia 
-      ixx="0.00030833333333" 
-      ixy="0" 
-      ixz="0" 
-      iyy="0.00478833333333" 
-      iyz="0" 
-      izz="0.00453333333333" />
-  </inertial>
-</xacro:macro>
-
-<xacro:macro name="differential_rod_inertial" params="mass">
-  <inertial>
-    <mass value="${mass}"/>
-    <inertia 
-      ixx="2.39452259042e-07" 
-      ixy="0" 
-      ixz="0" 
-      iyy="1.18596127489e-05" 
-      iyz="0" 
-      izz="1.20323211349e-05" />
-  </inertial>
-</xacro:macro>
-<!-- end Inertial matrixes -->
+<xacro:include filename="$(find jimmbot_description)/urdf/jimmbot_inertias.xacro" />
+<xacro:include filename="$(find jimmbot_description)/urdf/jimmbot.gazebo.xacro" />
 
 <!-- dummy base_link -->
 <link name="base_link" />
@@ -141,7 +20,6 @@
     <geometry>
         <mesh filename="package://jimmbot_description/meshes/chassis/chassis.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="silver"/>
     </visual>
   <collision>
     <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -153,6 +31,7 @@
 </link>
 <!-- end chassis -->
 
+<!-- @todo add IMU model -->
 <!-- imu -->
 <xacro:macro name="imu">
     <link name="imu_base">
@@ -161,38 +40,16 @@
             <geometry>
                 <box size="0.037 0.052 0.035" />
             </geometry>
-            <material name="silver"/>
         </visual>
-        <collision>
+        <!-- IMU is inside chassis, no need for collision, chassis collision will handle all inside the chassis -->
+        <!-- <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
                 <box size="0.037 0.052 0.035" />
             </geometry>
         </collision>
-        <xacro:lidar_inertial_base mass="0.15717"/>
+        <xacro:lidar_inertial_base mass="0.15717"/> -->
     </link>
-
-    <!-- Transfer to gazebo xacro -->
-    <gazebo reference="imu_base">
-      <gravity>true</gravity>
-      <sensor name="imu_sensor" type="imu">
-        <always_on>true</always_on>
-        <update_rate>50</update_rate>
-        <visualize>false</visualize>
-        <topic>__default_topic__</topic>
-        <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
-          <topicName>imu</topicName>
-          <bodyName>imu_base</bodyName>
-          <updateRateHZ>50.0</updateRateHZ>
-          <gaussianNoise>0.0</gaussianNoise>
-          <xyzOffset>0 0 0</xyzOffset>
-          <rpyOffset>0 0 0</rpyOffset>
-          <frameName>imu_base</frameName>
-          <initialOrientationAsReference>false</initialOrientationAsReference>
-        </plugin>
-        <pose>0 0 0 0 0 0</pose>
-      </sensor>
-    </gazebo>
 
     <joint name="chassis_to_imu" type="fixed">
         <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -211,7 +68,6 @@
             <geometry>
                 <mesh filename="package://jimmbot_description/meshes/ydlidar/ydlidar.dae" />
             </geometry>
-            <material name="lidar"/>
         </visual>
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -226,38 +82,6 @@
         <xacro:lidar_inertial_frame mass="0.25482"/>
     </link>
 
-    <!-- Transfer to gazebo xacro -->
-    <gazebo reference="lidar_base">
-      <sensor type="ray" name="ydlidar_sensor">
-        <update_rate>20.0</update_rate>
-        <visualize>false</visualize>
-        <ray>
-          <scan>
-            <horizontal>
-              <samples>720</samples>
-              <resolution>1</resolution>
-              <min_angle>-3.14</min_angle>
-              <max_angle>3.14</max_angle>
-            </horizontal>
-          </scan>
-          <range>
-            <min>0.10</min>
-            <max>12.0</max>
-            <resolution>0.01</resolution>
-          </range>
-          <noise>
-            <type>gaussian</type>
-            <mean>0.0</mean>
-            <stddev>0.01</stddev>
-          </noise>
-        </ray>
-        <plugin name="gazebo_ros_ydlidar_controller" filename="libgazebo_ros_laser.so">
-          <topicName>/laserscan</topicName>
-          <frameName>lidar_base</frameName>
-        </plugin>
-      </sensor>
-    </gazebo>
-
     <joint name="laser_joint" type="fixed">
         <origin rpy="0 0 0" xyz="0 0 0.03172" />
         <parent link="lidar_base" />
@@ -266,13 +90,40 @@
     </joint>
 
     <joint name="chassis_to_lidar" type="fixed">
-        <origin rpy="0 0 0" xyz="0 0 0.25"/>
-        <parent link="chassis"/>
+        <origin rpy="0 0 0" xyz="0 0 0.060"/>
+        <parent link="lidar_mount"/>
         <child link="lidar_base"/>
     </joint>
 </xacro:macro>
 <xacro:lidar />
 <!-- end lidar -->
+
+<!-- lidar mount -->
+<xacro:macro name="lidar_mount">
+    <link name="lidar_mount">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://jimmbot_description/meshes/ydlidar/ydlidar_mount.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://jimmbot_description/meshes/ydlidar/ydlidar_mount.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+        <xacro:lidar_mount_inertial mass="0.377"/>
+    </link>
+
+    <joint name="chassis_to_lidar_mount" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0.123"/>
+        <parent link="chassis"/>
+        <child link="lidar_mount"/>
+    </joint>
+</xacro:macro>
+<xacro:lidar_mount />
+<!-- end lidar mount -->
 
 <!-- kinect -->
 <xacro:macro name="kinect" params="postfix reflect">
@@ -282,7 +133,6 @@
             <geometry>
                 <mesh filename="package://jimmbot_description/meshes/kinect/kinect.dae" />
             </geometry>
-            <material name="silver"/>
         </visual>
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -299,45 +149,6 @@
         <child link="kinect_${postfix}_optical"/>
     </joint>
     <link name="kinect_${postfix}_optical"/>
-
-    <!-- Transfer to gazebo xacro -->
-    <gazebo reference="kinect_${postfix}">
-      <sensor type="depth" name="${postfix}">
-        <always_on>true</always_on>
-        <update_rate>20.0</update_rate>
-        <camera>
-          <horizontal_fov>${60.0*3.14/180.0}</horizontal_fov>
-          <image>
-            <format>R8G8B8</format>
-            <width>640</width>
-            <height>480</height>
-          </image>
-          <clip>
-            <near>0.05</near>
-            <far>8.0</far>
-          </clip>
-        </camera>
-        <plugin name="kinect_${postfix}_controller" filename="libgazebo_ros_openni_kinect.so">
-          <cameraName>${postfix}</cameraName>
-          <alwaysOn>true</alwaysOn>
-          <updateRate>10</updateRate>
-          <imageTopicName>rgb/image_raw</imageTopicName>
-          <depthImageTopicName>depth/image_raw</depthImageTopicName>
-          <pointCloudTopicName>depth/points</pointCloudTopicName>
-          <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
-          <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
-          <frameName>kinect_${postfix}_optical</frameName>
-          <baseline>0.1</baseline>
-          <distortion_k1>0.0</distortion_k1>
-          <distortion_k2>0.0</distortion_k2>
-          <distortion_k3>0.0</distortion_k3>
-          <distortion_t1>0.0</distortion_t1>
-          <distortion_t2>0.0</distortion_t2>
-          <pointCloudCutoff>0.4</pointCloudCutoff>
-          <robotNamespace>/</robotNamespace>
-        </plugin>
-      </sensor>
-    </gazebo>
 
     <joint name="chassis_to_kinect_${postfix}" type="fixed">
         <origin rpy="0 0.523599 ${reflect*1.5708-1.5708}" xyz="${reflect*0.25} 0 0.11"/>
@@ -359,7 +170,6 @@
             <geometry>
                 <mesh filename="package://jimmbot_description/meshes/boggie/boggie.stl" scale="0.001 0.001 0.001"/>
             </geometry>
-            <material name="silver"/>
         </visual>
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -383,8 +193,7 @@
     </joint>
 
     <joint name="chassis_to_boggie_${postfix}" type="fixed">
-        <limit effort="1000.0" lower="-0.523599" upper="0.523599" velocity="50"/>
-        <origin rpy="0 0 ${reflect*1.57}" xyz="-1.45758E-03 ${reflect*-201.552E-03} -19.8088E-03"/>
+        <origin rpy="0 0 ${reflect*1.57}" xyz="${reflect*-1.45758E-03} ${reflect*-201.552E-03} -19.8088E-03"/>
         <parent link="chassis"/>
         <child link="boggie_${postfix}"/>
     </joint>
@@ -403,7 +212,6 @@
             <geometry>
                 <mesh filename="package://jimmbot_description/meshes/differential/differential.stl" scale="0.001 0.001 0.001"/>
             </geometry>
-            <material name="silver"/>
         </visual>
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -448,14 +256,13 @@
             <geometry>
                 <mesh filename="package://jimmbot_description/meshes/differential/differential_rod.stl" scale="0.01 0.01 0.01"/>
             </geometry>
-            <material name="silver"/>
         </visual>
-        <!-- <collision>
+        <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
                 <mesh filename="package://jimmbot_description/meshes/differential/differential_rod.stl" scale="0.01 0.01 0.01"/>
             </geometry>
-        </collision> -->
+        </collision>
         <xacro:differential_rod_inertial mass="0.4"/>
     </link>
 
@@ -485,7 +292,6 @@
             <geometry>
                 <mesh filename="package://jimmbot_description/meshes/wheel/wheel_axis.stl" scale="0.001 0.001 0.001"/>
             </geometry>
-            <material name="silver"/>
         </visual>
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -502,7 +308,6 @@
             <geometry>
                 <mesh filename="package://jimmbot_description/meshes/wheel/wheel.stl" scale="0.001 0.001 0.001"/>
             </geometry>
-            <material name="silver"/>
         </visual>
         <collision>
             <origin rpy="0 1.5708 0" xyz="0.03 0 0"/>
@@ -543,11 +348,5 @@
 <xacro:wheel side="back" boggie="left" across="1" reflect="1" rotation="1"/>
 <xacro:wheel side="back" boggie="right" across="-1" reflect="1" rotation="-1"/>
 <!-- end wheels -->
-
-<gazebo>
-  <plugin name="gazebo_ros_control" filename= "libgazebo_ros_control.so">
-   <robotNamespace>/</robotNamespace>
-  </plugin>
-</gazebo>
 
 </robot>
