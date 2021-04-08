@@ -273,7 +273,7 @@
     </joint>
 
     <joint name="differential_rod_differential_${postfix}_${boggie}_to_differential_${boggie}_${postfix}" type="fixed">
-        <origin rpy="0 0.087266 ${reflect+0.4537}" xyz="0 0 17E-03"/>
+        <origin rpy="0 0 ${reflect+0.4537}" xyz="0 0 17E-03"/>
         <parent link="differential_${boggie}_${postfix}"/>
         <child link="differential_rod_differential_${postfix}_${boggie}"/>
     </joint>

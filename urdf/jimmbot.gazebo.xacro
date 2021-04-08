@@ -3,7 +3,7 @@
 
   <!-- Kinect front -->
   <gazebo reference="kinect_front_link">
-    <sensor type="depth" name="front">
+    <sensor type="depth" name="kinect_front">
       <always_on>true</always_on>
       <update_rate>20.0</update_rate>
       <camera>
@@ -19,10 +19,10 @@
         </clip>
       </camera>
       <plugin name="kinect_front_controller" filename="libgazebo_ros_openni_kinect.so">
-        <cameraName>front</cameraName>
+        <cameraName>kinect_front</cameraName>
         <alwaysOn>true</alwaysOn>
         <updateRate>10</updateRate>
-        <imageTopicName>rgb/image_raw</imageTopicName>
+        <imageTopicName>rgb/image_color</imageTopicName>
         <depthImageTopicName>depth/image_raw</depthImageTopicName>
         <pointCloudTopicName>depth/points</pointCloudTopicName>
         <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
@@ -41,7 +41,7 @@
 
   <!-- Kinect back -->
   <gazebo reference="kinect_back_link">
-    <sensor type="depth" name="back">
+    <sensor type="depth" name="kinect_back">
       <always_on>true</always_on>
       <update_rate>20.0</update_rate>
       <camera>
@@ -57,10 +57,10 @@
         </clip>
       </camera>
       <plugin name="kinect_back_controller" filename="libgazebo_ros_openni_kinect.so">
-        <cameraName>back</cameraName>
+        <cameraName>kinect_back</cameraName>
         <alwaysOn>true</alwaysOn>
         <updateRate>10</updateRate>
-        <imageTopicName>rgb/image_raw</imageTopicName>
+        <imageTopicName>rgb/image_color</imageTopicName>
         <depthImageTopicName>depth/image_raw</depthImageTopicName>
         <pointCloudTopicName>depth/points</pointCloudTopicName>
         <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
