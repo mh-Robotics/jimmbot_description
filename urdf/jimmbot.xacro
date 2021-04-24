@@ -60,6 +60,62 @@
 <xacro:imu />
 <!-- end imu -->
 
+<!-- gps -->
+<xacro:macro name="gps" params="postfix reflect">
+    <link name="gps_${postfix}_base">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://jimmbot_description/meshes/gps/linx_gps.dae" />
+            </geometry>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://jimmbot_description/meshes/gps/linx_gps.dae" />
+            </geometry>
+        </collision>
+        <!-- <xacro:gps_inertial mass="0.58"/> -->
+    </link>
+
+    <joint name="chassis_to_gps_${postfix}" type="fixed">
+        <origin rpy="1.5708 0 ${reflect*1.5708-1.5708}" xyz="${reflect*0.1} ${reflect*-0.1} 0.117"/>
+        <parent link="chassis"/>
+        <child link="gps_${postfix}_base"/>
+    </joint>
+</xacro:macro>
+<xacro:gps postfix="front" reflect="1"/>
+<xacro:gps postfix="back" reflect="-1"/>
+<!-- end gps -->
+
+<!-- wifi_antenna -->
+<xacro:macro name="wifi_antenna" params="postfix reflect">
+  <link name="wifi_antenna_${postfix}_base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/wifi_antenna/wifi_antenna.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/wifi_antenna/wifi_antenna.dae" />
+      </geometry>
+    </collision>
+    <!-- <xacro:wifi_antenna_inertial mass="0.58"/> -->
+  </link>
+
+  <joint name="chassis_to_wifi_antenna_${postfix}" type="fixed">
+    <origin rpy="1.5708 0 ${reflect*1.5708-1.5708}" xyz="${reflect*-0.06} ${reflect*0.1} 0.13"/>
+    <parent link="chassis"/>
+    <child link="wifi_antenna_${postfix}_base"/>
+  </joint>
+</xacro:macro>
+<xacro:wifi_antenna postfix="front" reflect="1"/>
+<xacro:wifi_antenna postfix="back" reflect="-1"/>
+<!-- end wifi_antenna -->
+
 <!-- lidar -->
 <xacro:macro name="lidar">
     <link name="lidar_base">
@@ -129,7 +185,7 @@
 <xacro:macro name="kinect" params="postfix reflect">
     <link name="kinect_${postfix}_link">
         <visual>
-            <origin rpy="0 0 1.57" xyz="0 0 0"/>
+            <origin rpy="0 0 1.5708" xyz="0 0 0"/>
             <geometry>
                 <mesh filename="package://jimmbot_description/meshes/kinect/kinect.dae" />
             </geometry>
@@ -168,13 +224,13 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://jimmbot_description/meshes/boggie/boggie.stl" scale="0.001 0.001 0.001"/>
+                <mesh filename="package://jimmbot_description/meshes/boggie/boggie.dae" scale="0.001 0.001 0.001"/>
             </geometry>
         </visual>
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://jimmbot_description/meshes/boggie/boggie.stl" scale="0.001 0.001 0.001"/>
+                <mesh filename="package://jimmbot_description/meshes/boggie/boggie.dae" scale="0.001 0.001 0.001"/>
             </geometry>
         </collision>
         <xacro:boggie_inertial mass="6.0"/>
@@ -193,7 +249,7 @@
     </joint>
 
     <joint name="chassis_to_boggie_${postfix}" type="fixed">
-        <origin rpy="0 0 ${reflect*1.57}" xyz="${reflect*-1.45758E-03} ${reflect*-201.552E-03} -19.8088E-03"/>
+        <origin rpy="0 0 ${reflect*1.5708}" xyz="${reflect*-1.45758E-03} ${reflect*-201.552E-03} -19.8088E-03"/>
         <parent link="chassis"/>
         <child link="boggie_${postfix}"/>
     </joint>
@@ -236,7 +292,7 @@
 
     <joint name="chassis_to_differential_${postfix}" type="fixed">
         <limit effort="1000.0" lower="-0.523599" upper="0.523599" velocity="50"/>
-        <origin rpy="0 0 ${reflect*1.57}" xyz="${reflect*147.5E-03} 0 147.0E-03"/>
+        <origin rpy="0 0 ${reflect*1.5708}" xyz="${reflect*147.5E-03} 0 147.0E-03"/>
         <parent link="chassis"/>
         <child link="differential_${postfix}"/>
     </joint>
@@ -278,9 +334,9 @@
         <child link="differential_rod_differential_${postfix}_${boggie}"/>
     </joint>
 </xacro:macro>
-<xacro:differential_rod postfix="front" boggie="right" reflect="-1.57"/>
+<xacro:differential_rod postfix="front" boggie="right" reflect="-1.5708"/>
 <xacro:differential_rod postfix="front" boggie="left" reflect="-2.4774"/>
-<xacro:differential_rod postfix="back" boggie="right" reflect="-1.57"/>
+<xacro:differential_rod postfix="back" boggie="right" reflect="-1.5708"/>
 <xacro:differential_rod postfix="back" boggie="left" reflect="-2.4774"/>
 <!-- end differential_rod -->
 
@@ -290,13 +346,13 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://jimmbot_description/meshes/wheel/wheel_axis.stl" scale="0.001 0.001 0.001"/>
+                <mesh filename="package://jimmbot_description/meshes/wheel/wheel_axis.dae" scale="0.001 0.001 0.001"/>
             </geometry>
         </visual>
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://jimmbot_description/meshes/wheel/wheel_axis.stl" scale="0.001 0.001 0.001"/>
+                <mesh filename="package://jimmbot_description/meshes/wheel/wheel_axis.dae" scale="0.001 0.001 0.001"/>
             </geometry>
         </collision>
         <xacro:wheel_axis_inertial mass="0.039"/>
@@ -306,7 +362,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://jimmbot_description/meshes/wheel/wheel.stl" scale="0.001 0.001 0.001"/>
+                <mesh filename="package://jimmbot_description/meshes/wheel/wheel.dae" scale="0.001 0.001 0.001"/>
             </geometry>
         </visual>
         <collision>
@@ -319,7 +375,7 @@
     </link>
 
     <joint name="boggie_${boggie}_to_wheel_axis_${side}_${boggie}" type="fixed">
-        <origin rpy="${reflect*across*-0.785398} 0 ${reflect*across*-3.14}" xyz="${reflect*-40.000E-03} ${across*-290.414E-03} -70.2315E-03"/>
+        <origin rpy="${reflect*across*-0.785398} 0 ${reflect*across*-3.14159}" xyz="${reflect*-40.000E-03} ${across*-290.414E-03} -70.2315E-03"/>
         <parent link="boggie_${boggie}"/>
         <child link="wheel_axis_${side}_${boggie}"/>
     </joint>
