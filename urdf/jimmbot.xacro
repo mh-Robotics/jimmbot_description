@@ -18,13 +18,13 @@
   <visual>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <geometry>
-        <mesh filename="package://jimmbot_description/meshes/chassis/chassis.stl" scale="0.001 0.001 0.001"/>
-      </geometry>
-    </visual>
+      <mesh filename="package://jimmbot_description/meshes/chassis/chassis.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </visual>
   <collision>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <geometry>
-        <mesh filename="package://jimmbot_description/meshes/chassis/chassis.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://jimmbot_description/meshes/chassis/chassis.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
   <xacro:chassis_inertial mass="40.0"/>
@@ -34,55 +34,55 @@
 <!-- @todo add IMU model -->
 <!-- imu -->
 <xacro:macro name="imu">
-    <link name="imu_base">
-        <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <box size="0.037 0.052 0.035" />
-            </geometry>
-        </visual>
-        <!-- IMU is inside chassis, no need for collision, chassis collision will handle all inside the chassis -->
-        <!-- <collision>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <box size="0.037 0.052 0.035" />
-            </geometry>
-        </collision>
-        <xacro:lidar_inertial_base mass="0.15717"/> -->
-    </link>
+  <link name="imu_base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.037 0.052 0.035" />
+      </geometry>
+    </visual>
+    <!-- IMU is inside chassis, no need for collision, chassis collision will handle all inside the chassis -->
+    <!-- <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.037 0.052 0.035" />
+      </geometry>
+    </collision>
+    <xacro:lidar_inertial_base mass="0.15717"/> -->
+  </link>
 
-    <joint name="chassis_to_imu" type="fixed">
-        <origin rpy="0 0 0" xyz="0 0 0"/>
-        <parent link="chassis"/>
-        <child link="imu_base"/>
-    </joint>
+  <joint name="chassis_to_imu" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="chassis"/>
+    <child link="imu_base"/>
+  </joint>
 </xacro:macro>
 <xacro:imu />
 <!-- end imu -->
 
 <!-- gps -->
 <xacro:macro name="gps" params="postfix reflect">
-    <link name="gps_${postfix}_base">
-        <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/gps/linx_gps.dae" />
-            </geometry>
-        </visual>
-        <collision>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/gps/linx_gps.dae" />
-            </geometry>
-        </collision>
-        <!-- <xacro:gps_inertial mass="0.58"/> -->
-    </link>
+  <link name="gps_${postfix}_base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/gps/linx_gps.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/gps/linx_gps.dae" />
+      </geometry>
+    </collision>
+    <!-- <xacro:gps_inertial mass="0.58"/> -->
+  </link>
 
-    <joint name="chassis_to_gps_${postfix}" type="fixed">
-        <origin rpy="1.5708 0 ${reflect*1.5708-1.5708}" xyz="${reflect*0.1} ${reflect*-0.1} 0.117"/>
-        <parent link="chassis"/>
-        <child link="gps_${postfix}_base"/>
-    </joint>
+  <joint name="chassis_to_gps_${postfix}" type="fixed">
+    <origin rpy="1.5708 0 ${reflect*1.5708-1.5708}" xyz="${reflect*0.1} ${reflect*-0.1} 0.117"/>
+    <parent link="chassis"/>
+    <child link="gps_${postfix}_base"/>
+  </joint>
 </xacro:macro>
 <xacro:gps postfix="front" reflect="1"/>
 <xacro:gps postfix="back" reflect="-1"/>
@@ -118,99 +118,111 @@
 
 <!-- lidar -->
 <xacro:macro name="lidar">
-    <link name="lidar_base">
-        <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/ydlidar/ydlidar.dae" />
-            </geometry>
-        </visual>
-        <collision>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/ydlidar/ydlidar.dae" />
-            </geometry>
-        </collision>
-        <xacro:lidar_inertial_base mass="0.15717"/>
-    </link>
+  <link name="lidar_base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/ydlidar/ydlidar.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/ydlidar/ydlidar.dae" />
+      </geometry>
+    </collision>
+    <xacro:lidar_inertial_base mass="0.15717"/>
+  </link>
 
-    <link name="lidar_frame">
-        <xacro:lidar_inertial_frame mass="0.25482"/>
-    </link>
+  <link name="lidar_frame">
+    <xacro:lidar_inertial_frame mass="0.25482"/>
+  </link>
 
-    <joint name="laser_joint" type="fixed">
-        <origin rpy="0 0 0" xyz="0 0 0.03172" />
-        <parent link="lidar_base" />
-        <child link="lidar_frame" />
-        <axis xyz="0 0 0" />
-    </joint>
+  <joint name="laser_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.03172" />
+    <parent link="lidar_base" />
+    <child link="lidar_frame" />
+  </joint>
 
-    <joint name="chassis_to_lidar" type="fixed">
-        <origin rpy="0 0 0" xyz="0 0 0.060"/>
-        <parent link="lidar_mount"/>
-        <child link="lidar_base"/>
-    </joint>
+  <joint name="chassis_to_lidar" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.060"/>
+    <parent link="lidar_mount"/>
+    <child link="lidar_base"/>
+  </joint>
 </xacro:macro>
 <xacro:lidar />
 <!-- end lidar -->
 
 <!-- lidar mount -->
 <xacro:macro name="lidar_mount">
-    <link name="lidar_mount">
-        <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/ydlidar/ydlidar_mount.stl" scale="0.001 0.001 0.001"/>
-            </geometry>
-        </visual>
-        <collision>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/ydlidar/ydlidar_mount.stl" scale="0.001 0.001 0.001"/>
-            </geometry>
-        </collision>
-        <xacro:lidar_mount_inertial mass="0.377"/>
-    </link>
+  <link name="lidar_mount">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/ydlidar/ydlidar_mount.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/ydlidar/ydlidar_mount.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <xacro:lidar_mount_inertial mass="0.377"/>
+  </link>
 
-    <joint name="chassis_to_lidar_mount" type="fixed">
-        <origin rpy="0 0 0" xyz="0 0 0.123"/>
-        <parent link="chassis"/>
-        <child link="lidar_mount"/>
-    </joint>
+  <joint name="chassis_to_lidar_mount" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.123"/>
+    <parent link="chassis"/>
+    <child link="lidar_mount"/>
+  </joint>
 </xacro:macro>
 <xacro:lidar_mount />
 <!-- end lidar mount -->
 
 <!-- kinect -->
 <xacro:macro name="kinect" params="postfix reflect">
-    <link name="kinect_${postfix}_link">
-        <visual>
-            <origin rpy="0 0 1.5708" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/kinect/kinect.dae" />
-            </geometry>
-        </visual>
-        <collision>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/kinect/kinect.dae" scale="0.001 0.001 0.001"/>
-            </geometry>
-        </collision>
-        <xacro:differential_inertial mass="0.5"/>
-    </link>
+  <link name="kinect_${postfix}_link">
+    <visual>
+      <origin rpy="0 0 1.5708" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/kinect/kinect.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/kinect/kinect.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <xacro:differential_inertial mass="0.5"/>
+  </link>
 
-    <joint name="kinect_${postfix}_optical_joint" type="fixed">
-        <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/>
-        <parent link="kinect_${postfix}_link"/>
-        <child link="kinect_${postfix}_optical"/>
-    </joint>
-    <link name="kinect_${postfix}_optical"/>
+  <joint name="kinect_${postfix}_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/>
+    <parent link="kinect_${postfix}_link"/>
+    <child link="kinect_${postfix}_optical"/>
+  </joint>
+  <link name="kinect_${postfix}_optical"/>
 
-    <joint name="chassis_to_kinect_${postfix}" type="fixed">
-        <origin rpy="0 0.523599 ${reflect*1.5708-1.5708}" xyz="${reflect*0.25} 0 0.11"/>
-        <parent link="chassis"/>
-        <child link="kinect_${postfix}_link"/>
+  <joint name="chassis_to_kinect_${postfix}" type="revolute">
+    <axis xyz="0 ${reflect} 0"/>
+    <limit effort="30.0" lower="-0.523599" upper="0.523599" velocity="0.5"/>
+    <origin rpy="0 0.523599 ${reflect*1.5708-1.5708}" xyz="${reflect*0.25} 0 0.11"/>
+    <parent link="chassis"/>
+    <child link="kinect_${postfix}_link"/>
+  </joint>
+
+  <transmission name="chassis_to_kinect_${postfix}_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="chassis_to_kinect_${postfix}_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="chassis_to_kinect_${postfix}">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
+  </transmission>
 </xacro:macro>
 <xacro:kinect postfix="front" reflect="1"/>
 <xacro:kinect postfix="back" reflect="-1"/>
@@ -218,41 +230,41 @@
 
 <!-- boggies -->
 <xacro:macro name="boggie" params="postfix reflect">
-    <link name="boggie_${postfix}_front_rods" />
-    <link name="boggie_${postfix}_back_rods" />
-    <link name="boggie_${postfix}">
-        <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/boggie/boggie.dae" scale="0.001 0.001 0.001"/>
-            </geometry>
-        </visual>
-        <collision>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/boggie/boggie.dae" scale="0.001 0.001 0.001"/>
-            </geometry>
-        </collision>
-        <xacro:boggie_inertial mass="6.0"/>
-    </link>
+  <link name="boggie_${postfix}_front_rods" />
+  <link name="boggie_${postfix}_back_rods" />
+  <link name="boggie_${postfix}">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/boggie/boggie.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/boggie/boggie.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <xacro:boggie_inertial mass="6.0"/>
+  </link>
 
-    <joint name="boggie_${postfix}_front_rods_to_boggie_${postfix}" type="fixed">
-        <origin rpy="0 0 0" xyz="9E-03 -2.5E-03 200E-03"/>
-        <parent link="boggie_${postfix}"/>
-        <child link="boggie_${postfix}_front_rods"/>
-    </joint>
+  <joint name="boggie_${postfix}_front_rods_to_boggie_${postfix}" type="fixed">
+    <origin rpy="0 0 0" xyz="9E-03 -2.5E-03 200E-03"/>
+    <parent link="boggie_${postfix}"/>
+    <child link="boggie_${postfix}_front_rods"/>
+  </joint>
 
-    <joint name="boggie_${postfix}_back_rods_to_boggie_${postfix}" type="fixed">
-        <origin rpy="0 0 0" xyz="9E-03 -2.5E-03 220E-03"/>
-        <parent link="boggie_${postfix}"/>
-        <child link="boggie_${postfix}_back_rods"/>
-    </joint>
+  <joint name="boggie_${postfix}_back_rods_to_boggie_${postfix}" type="fixed">
+    <origin rpy="0 0 0" xyz="9E-03 -2.5E-03 220E-03"/>
+    <parent link="boggie_${postfix}"/>
+    <child link="boggie_${postfix}_back_rods"/>
+  </joint>
 
-    <joint name="chassis_to_boggie_${postfix}" type="fixed">
-        <origin rpy="0 0 ${reflect*1.5708}" xyz="${reflect*-1.45758E-03} ${reflect*-201.552E-03} -19.8088E-03"/>
-        <parent link="chassis"/>
-        <child link="boggie_${postfix}"/>
-    </joint>
+  <joint name="chassis_to_boggie_${postfix}" type="fixed">
+    <origin rpy="0 0 ${reflect*1.5708}" xyz="${reflect*-1.45758E-03} ${reflect*-201.552E-03} -19.8088E-03"/>
+    <parent link="chassis"/>
+    <child link="boggie_${postfix}"/>
+  </joint>
 </xacro:macro>
 <xacro:boggie postfix="right" reflect="1"/>
 <xacro:boggie postfix="left" reflect="-1"/>
@@ -260,42 +272,43 @@
 
 <!-- differential -->
 <xacro:macro name="differential" params="postfix reflect">
-    <link name="differential_left_${postfix}" />
-    <link name="differential_right_${postfix}" />
-    <link name="differential_${postfix}">
-        <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/differential/differential.stl" scale="0.001 0.001 0.001"/>
-            </geometry>
-        </visual>
-        <collision>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/differential/differential.stl" scale="0.001 0.001 0.001"/>
-            </geometry>
-        </collision>
-        <xacro:differential_inertial mass="0.8"/>
-    </link>
+  <link name="differential_left_${postfix}" />
+  <link name="differential_right_${postfix}" />
+  <link name="differential_${postfix}">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/differential/differential.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/differential/differential.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <xacro:differential_inertial mass="0.8"/>
+  </link>
 
-    <joint name="differential_${postfix}_to_differential_left_${postfix}" type="fixed">
-        <origin rpy="0 0 0" xyz="120E-03 0 0"/>
-        <parent link="differential_${postfix}"/>
-        <child link="differential_left_${postfix}"/>
-    </joint>
+  <joint name="differential_${postfix}_to_differential_left_${postfix}" type="fixed">
+    <origin rpy="0 0 0" xyz="120E-03 0 0"/>
+    <parent link="differential_${postfix}"/>
+    <child link="differential_left_${postfix}"/>
+  </joint>
 
-    <joint name="differential_${postfix}_to_differential_right_${postfix}" type="fixed">
-        <origin rpy="0 0 0" xyz="-120E-03 0 0"/>
-        <parent link="differential_${postfix}"/>
-        <child link="differential_right_${postfix}"/>
-    </joint>
+  <joint name="differential_${postfix}_to_differential_right_${postfix}" type="fixed">
+    <origin rpy="0 0 0" xyz="-120E-03 0 0"/>
+    <parent link="differential_${postfix}"/>
+    <child link="differential_right_${postfix}"/>
+  </joint>
 
-    <joint name="chassis_to_differential_${postfix}" type="fixed">
-        <limit effort="1000.0" lower="-0.523599" upper="0.523599" velocity="50"/>
-        <origin rpy="0 0 ${reflect*1.5708}" xyz="${reflect*147.5E-03} 0 147.0E-03"/>
-        <parent link="chassis"/>
-        <child link="differential_${postfix}"/>
-    </joint>
+  <joint name="chassis_to_differential_${postfix}" type="fixed">
+    <axis xyz="${reflect} 0 0"/>
+    <limit effort="30.0" lower="-0.523599" upper="0.523599" velocity="0.5"/>
+    <origin rpy="0 0 ${reflect*1.5708}" xyz="${reflect*147.5E-03} 0 147.0E-03"/>
+    <parent link="chassis"/>
+    <child link="differential_${postfix}"/>
+  </joint>
 </xacro:macro>
 <xacro:differential postfix="front" reflect="1"/>
 <xacro:differential postfix="back" reflect="-1"/>
@@ -303,36 +316,36 @@
 
 <!-- differential_rod -->
 <xacro:macro name="differential_rod" params="postfix boggie reflect">
-    <link name="differential_rod_differential_${postfix}_${boggie}" />
-    <!-- <link name="differential_rod_boggie_${postfix}_${boggie}" /> -->
-    
-    <link name="differential_rod_${postfix}_${boggie}">
-        <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/differential/differential_rod.stl" scale="0.01 0.01 0.01"/>
-            </geometry>
-        </visual>
-        <collision>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/differential/differential_rod.stl" scale="0.01 0.01 0.01"/>
-            </geometry>
-        </collision>
-        <xacro:differential_rod_inertial mass="0.4"/>
-    </link>
+  <link name="differential_rod_differential_${postfix}_${boggie}" />
+  <!-- <link name="differential_rod_boggie_${postfix}_${boggie}" /> -->
+  
+  <link name="differential_rod_${postfix}_${boggie}">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/differential/differential_rod.stl" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/differential/differential_rod.stl" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </collision>
+    <xacro:differential_rod_inertial mass="0.4"/>
+  </link>
 
-    <joint name="differential_rod_${postfix}_${boggie}_to_differential_rod_differential_${postfix}_${boggie}" type="fixed">
-        <origin rpy="0 0 0" xyz="-82E-03 0 0"/>
-        <parent link="differential_rod_differential_${postfix}_${boggie}"/>
-        <child link="differential_rod_${postfix}_${boggie}"/>
-    </joint>
+  <joint name="differential_rod_${postfix}_${boggie}_to_differential_rod_differential_${postfix}_${boggie}" type="fixed">
+    <origin rpy="0 0 0" xyz="-82E-03 0 0"/>
+    <parent link="differential_rod_differential_${postfix}_${boggie}"/>
+    <child link="differential_rod_${postfix}_${boggie}"/>
+  </joint>
 
-    <joint name="differential_rod_differential_${postfix}_${boggie}_to_differential_${boggie}_${postfix}" type="fixed">
-        <origin rpy="0 0 ${reflect+0.4537}" xyz="0 0 17E-03"/>
-        <parent link="differential_${boggie}_${postfix}"/>
-        <child link="differential_rod_differential_${postfix}_${boggie}"/>
-    </joint>
+  <joint name="differential_rod_differential_${postfix}_${boggie}_to_differential_${boggie}_${postfix}" type="fixed">
+    <origin rpy="0 0 ${reflect+0.4537}" xyz="0 0 17E-03"/>
+    <parent link="differential_${boggie}_${postfix}"/>
+    <child link="differential_rod_differential_${postfix}_${boggie}"/>
+  </joint>
 </xacro:macro>
 <xacro:differential_rod postfix="front" boggie="right" reflect="-1.5708"/>
 <xacro:differential_rod postfix="front" boggie="left" reflect="-2.4774"/>
@@ -342,61 +355,61 @@
 
 <!-- wheels -->
 <xacro:macro name="wheel" params="side boggie reflect across rotation">
-    <link name="wheel_axis_${side}_${boggie}">
-        <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/wheel/wheel_axis.dae" scale="0.001 0.001 0.001"/>
-            </geometry>
-        </visual>
-        <collision>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/wheel/wheel_axis.dae" scale="0.001 0.001 0.001"/>
-            </geometry>
-        </collision>
-        <xacro:wheel_axis_inertial mass="0.039"/>
-    </link>
+  <link name="wheel_axis_${side}_${boggie}">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/wheel/wheel_axis.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://jimmbot_description/meshes/wheel/wheel_axis.dae" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <xacro:wheel_axis_inertial mass="0.039"/>
+  </link>
 
-    <link name="wheel_${side}_${boggie}">
-        <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://jimmbot_description/meshes/wheel/wheel.dae" scale="0.001 0.001 0.001"/>
-            </geometry>
-        </visual>
-        <collision>
-            <origin rpy="0 1.5708 0" xyz="0.03 0 0"/>
-            <geometry>
-                <cylinder radius="0.08255" length="0.045"/>
-            </geometry>
-        </collision>
-        <xacro:wheel_inertial mass="1.7"/>
-    </link>
-
-    <joint name="boggie_${boggie}_to_wheel_axis_${side}_${boggie}" type="fixed">
-        <origin rpy="${reflect*across*-0.785398} 0 ${reflect*across*-3.14159}" xyz="${reflect*-40.000E-03} ${across*-290.414E-03} -70.2315E-03"/>
-        <parent link="boggie_${boggie}"/>
-        <child link="wheel_axis_${side}_${boggie}"/>
-    </joint>
-
-    <joint name="wheel_axis_${side}_${boggie}_to_wheel_${side}_${boggie}" type="continuous">
-        <axis xyz="${rotation} 0 0"/>
+  <link name="wheel_${side}_${boggie}">
+      <visual>
         <origin rpy="0 0 0" xyz="0 0 0"/>
-        <parent link="wheel_axis_${side}_${boggie}"/>
-        <child link="wheel_${side}_${boggie}"/>
-    </joint>
+        <geometry>
+          <mesh filename="package://jimmbot_description/meshes/wheel/wheel.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin rpy="0 1.5708 0" xyz="0.03 0 0"/>
+        <geometry>
+          <cylinder radius="0.08255" length="0.045"/>
+        </geometry>
+      </collision>
+      <xacro:wheel_inertial mass="1.7"/>
+  </link>
 
-    <transmission name="wheel_axis_${side}_${boggie}_to_wheel_${side}_${boggie}_trans">
-        <type>transmission_interface/SimpleTransmission</type>
-        <actuator name="wheel_axis_${side}_${boggie}_to_wheel_${side}_${boggie}_motor">
-            <hardwareInterface>EffortJointInterface</hardwareInterface>
-            <mechanicalReduction>1</mechanicalReduction>
-        </actuator>
-        <joint name="wheel_axis_${side}_${boggie}_to_wheel_${side}_${boggie}">
-            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-        </joint>
-    </transmission>
+  <joint name="boggie_${boggie}_to_wheel_axis_${side}_${boggie}" type="fixed">
+    <origin rpy="${reflect*across*-0.785398} 0 ${reflect*across*-3.14159}" xyz="${reflect*-40.000E-03} ${across*-290.414E-03} -70.2315E-03"/>
+    <parent link="boggie_${boggie}"/>
+    <child link="wheel_axis_${side}_${boggie}"/>
+  </joint>
+
+  <joint name="wheel_axis_${side}_${boggie}_to_wheel_${side}_${boggie}" type="continuous">
+    <axis xyz="${rotation} 0 0"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="wheel_axis_${side}_${boggie}"/>
+    <child link="wheel_${side}_${boggie}"/>
+  </joint>
+
+  <transmission name="wheel_axis_${side}_${boggie}_to_wheel_${side}_${boggie}_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="wheel_axis_${side}_${boggie}_to_wheel_${side}_${boggie}_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="wheel_axis_${side}_${boggie}_to_wheel_${side}_${boggie}">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
 
 </xacro:macro>
 <xacro:wheel side="front" boggie="left" across="-1" reflect="1" rotation="1"/>
