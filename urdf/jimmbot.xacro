@@ -1,8 +1,34 @@
 <?xml version="1.0" ?>
 <robot name="jimmbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+<xacro:arg name="enable_control" default="true" />
+
 <xacro:include filename="$(find jimmbot_description)/urdf/jimmbot_inertias.xacro" />
 <xacro:include filename="$(find jimmbot_description)/urdf/jimmbot.gazebo.xacro" />
+
+<material name="jimmbot_chassis_gray">
+  <color rgba="0.20 0.23 0.26 1.0"/>
+</material>
+
+<material name="jimmbot_sensor_black">
+  <color rgba="0.08 0.09 0.10 1.0"/>
+</material>
+
+<material name="jimmbot_metal">
+  <color rgba="0.58 0.61 0.66 1.0"/>
+</material>
+
+<material name="jimmbot_trim_orange">
+  <color rgba="0.86 0.42 0.18 1.0"/>
+</material>
+
+<material name="jimmbot_rubber">
+  <color rgba="0.11 0.11 0.12 1.0"/>
+</material>
+
+<material name="jimmbot_sensor_light">
+  <color rgba="0.74 0.76 0.79 1.0"/>
+</material>
 
 <!-- dummy base_link -->
 <link name="base_link" />
@@ -20,6 +46,7 @@
     <geometry>
       <mesh filename="package://jimmbot_description/meshes/chassis/chassis.stl" scale="0.001 0.001 0.001"/>
     </geometry>
+    <material name="jimmbot_chassis_gray"/>
   </visual>
   <collision>
     <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -40,6 +67,7 @@
       <geometry>
         <box size="0.037 0.052 0.035" />
       </geometry>
+      <material name="jimmbot_sensor_black"/>
     </visual>
     <!-- IMU is inside chassis, no need for collision, chassis collision will handle all inside the chassis -->
     <!-- <collision>
@@ -161,6 +189,7 @@
       <geometry>
         <mesh filename="package://jimmbot_description/meshes/ydlidar/ydlidar_mount.stl" scale="0.001 0.001 0.001"/>
       </geometry>
+      <material name="jimmbot_metal"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -186,7 +215,7 @@
     <visual>
       <origin rpy="0 0 1.5708" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://jimmbot_description/meshes/kinect/kinect.dae" />
+        <mesh filename="package://jimmbot_description/meshes/kinect/kinect.dae" scale="0.001 0.001 0.001" />
       </geometry>
     </visual>
     <collision>
@@ -269,6 +298,7 @@
       <geometry>
         <mesh filename="package://jimmbot_description/meshes/differential/differential.stl" scale="0.001 0.001 0.001"/>
       </geometry>
+      <material name="jimmbot_metal"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -307,13 +337,14 @@
 <xacro:macro name="differential_rod" params="postfix boggie reflect">
   <link name="differential_rod_differential_${postfix}_${boggie}" />
   <!-- <link name="differential_rod_boggie_${postfix}_${boggie}" /> -->
-  
+
   <link name="differential_rod_${postfix}_${boggie}">
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://jimmbot_description/meshes/differential/differential_rod.stl" scale="0.01 0.01 0.01"/>
       </geometry>
+      <material name="jimmbot_metal"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>

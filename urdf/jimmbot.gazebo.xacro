@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <robot name="jimmbot_simulation" xmlns:xacro="http://ros.org/wiki/xacro">
 
+  <xacro:arg name="enable_control" default="true" />
+
   <!-- Kinect front -->
   <gazebo reference="kinect_front_link">
     <sensor type="depth" name="kinect_front">
@@ -97,11 +99,13 @@
     </sensor>
   </gazebo>
 
-  <gazebo>
-    <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-      <parameters>$(find jimmbot_description)/config/gz_ros2_control.yaml</parameters>
-    </plugin>
-  </gazebo>
+  <xacro:if value="$(arg enable_control)">
+    <gazebo>
+      <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+        <parameters>$(find jimmbot_controller)/config/gz_ros2_control.yaml</parameters>
+      </plugin>
+    </gazebo>
+  </xacro:if>
 
   <!-- NOTE: Gazebo Classic ROS plugins were removed for ROS 2 + Gazebo Sim bringup.
        Equivalent ROS topic delivery is now expected through ros_gz_bridge.
