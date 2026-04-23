@@ -6,6 +6,7 @@
     <sensor type="depth" name="kinect_front">
       <always_on>true</always_on>
       <update_rate>20.0</update_rate>
+      <topic>/kinect_front/depth/image_raw</topic>
       <camera>
         <horizontal_fov>${60.0*3.14/180.0}</horizontal_fov>
         <image>
@@ -18,24 +19,6 @@
           <far>8.0</far>
         </clip>
       </camera>
-      <plugin name="kinect_front_controller" filename="libgazebo_ros_openni_kinect.so">
-        <cameraName>kinect_front</cameraName>
-        <alwaysOn>true</alwaysOn>
-        <updateRate>10</updateRate>
-        <imageTopicName>rgb/image_color</imageTopicName>
-        <depthImageTopicName>depth/image_raw</depthImageTopicName>
-        <pointCloudTopicName>depth/points</pointCloudTopicName>
-        <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
-        <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
-        <frameName>kinect_front_optical</frameName>
-        <baseline>0.1</baseline>
-        <distortion_k1>0.0</distortion_k1>
-        <distortion_k2>0.0</distortion_k2>
-        <distortion_k3>0.0</distortion_k3>
-        <distortion_t1>0.0</distortion_t1>
-        <distortion_t2>0.0</distortion_t2>
-        <pointCloudCutoff>0.4</pointCloudCutoff>
-      </plugin>
     </sensor>
   </gazebo>
 
@@ -44,6 +27,7 @@
     <sensor type="depth" name="kinect_back">
       <always_on>true</always_on>
       <update_rate>20.0</update_rate>
+      <topic>/kinect_back/depth/image_raw</topic>
       <camera>
         <horizontal_fov>${60.0*3.14/180.0}</horizontal_fov>
         <image>
@@ -56,24 +40,6 @@
           <far>8.0</far>
         </clip>
       </camera>
-      <plugin name="kinect_back_controller" filename="libgazebo_ros_openni_kinect.so">
-        <cameraName>kinect_back</cameraName>
-        <alwaysOn>true</alwaysOn>
-        <updateRate>10</updateRate>
-        <imageTopicName>rgb/image_color</imageTopicName>
-        <depthImageTopicName>depth/image_raw</depthImageTopicName>
-        <pointCloudTopicName>depth/points</pointCloudTopicName>
-        <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
-        <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
-        <frameName>kinect_back_optical</frameName>
-        <baseline>0.1</baseline>
-        <distortion_k1>0.0</distortion_k1>
-        <distortion_k2>0.0</distortion_k2>
-        <distortion_k3>0.0</distortion_k3>
-        <distortion_t1>0.0</distortion_t1>
-        <distortion_t2>0.0</distortion_t2>
-        <pointCloudCutoff>0.4</pointCloudCutoff>
-      </plugin>
     </sensor>
   </gazebo>
 
@@ -83,18 +49,7 @@
       <always_on>true</always_on>
       <update_rate>50</update_rate>
       <visualize>false</visualize>
-      <topic>__default_topic__</topic>
-      <plugin name="imu_plugin" filename="libgazebo_ros_imu_sensor.so">
-        <topicName>imu</topicName>
-        <bodyName>imu_base</bodyName>
-        <updateRateHZ>50.0</updateRateHZ>
-        <gaussianNoise>0.05</gaussianNoise>
-        <xyzOffset>0 0 0</xyzOffset>
-        <rpyOffset>0 0 0</rpyOffset>
-        <yawOffset>1.5708</yawOffset>
-        <frameName>imu_base</frameName>
-        <initialOrientationAsReference>false</initialOrientationAsReference>
-      </plugin>
+      <topic>/imu</topic>
     </sensor>
   </gazebo>
 
@@ -102,6 +57,7 @@
     <sensor type="ray" name="ydlidar_sensor">
       <update_rate>12.0</update_rate>
       <visualize>false</visualize>
+      <topic>/laserscan</topic>
       <ray>
         <scan>
           <horizontal>
@@ -122,69 +78,33 @@
           <stddev>0.01</stddev>
         </noise>
       </ray>
-      <plugin name="gazebo_ros_ydlidar_controller" filename="libgazebo_ros_laser.so">
-        <topicName>/laserscan</topicName>
-        <frameName>lidar_frame</frameName>
-      </plugin>
     </sensor>
   </gazebo>
 
-<!-- @todo Check if this or gazebo_imu is better -->
-  <!-- <gazebo>
-    <plugin name="imu_base" filename="libhector_gazebo_ros_imu.so">
-      <serviceName>/imu/calibrate</serviceName>
-      <updateRate>200.0</updateRate>
-      <bodyName>imu_base</bodyName>
-      <frameId>imu_base</frameId>
-      <topicName>imu</topicName>
-      <rpyOffset>0 0 0</rpyOffset>
-      <xyzOffset>0 0 0</xyzOffset>
-      <gaussianNoise>0.00000001</gaussianNoise>
-      <accelDrift>0.00000001 0.00000001 0.00000001</accelDrift>
-      <accelDriftFrequency>0.00000001 0.00000001 0.00000001</accelDriftFrequency>
-      <accelGaussianNoise>0.00000001 0.00000001 0.00000001</accelGaussianNoise>
-      <rateDrift>0.0 0.0 0.0</rateDrift>
-      <rateDriftFrequency>0.0 0.0 0.0</rateDriftFrequency>
-      <rateGaussianNoise>0.0 0.0 0.0</rateGaussianNoise>
-      <headingDrift>0.0 0.0 0.0</headingDrift>
-      <headingDriftFrequency>0.0 0.0 0.0</headingDriftFrequency>
-      <headingGaussianNoise>0.0 0.0 0.0</headingGaussianNoise>
-    </plugin>
-  </gazebo> -->
+  <gazebo reference="gps_front_base">
+    <sensor name="gps_front_sensor" type="navsat">
+      <always_on>true</always_on>
+      <update_rate>50.0</update_rate>
+      <topic>/gps/fix_front</topic>
+    </sensor>
+  </gazebo>
 
-  <gazebo>
-    <plugin name="gps_sensor_front" filename="libhector_gazebo_ros_gps.so">
-        <alwayson>true</alwayson>
-        <updaterate>50.0</updaterate>
-        <bodyname>gps_front_base</bodyname>
-        <frameId>gps_front_base</frameId>
-        <topicName>gps/fix_front</topicName>
-        <velocityTopicName>gps/fix_front_velocity</velocityTopicName>
-        <drift>0.001 0.001 0.001</drift>
-        <gaussianNoise>0.05 0.05 0.05</gaussianNoise>
-        <velocityDrift>0.001 0.001 0.001</velocityDrift>
-        <velocityGaussianNoise>0.5 0.5 0.5</velocityGaussianNoise>
-    </plugin>
+  <gazebo reference="gps_back_base">
+    <sensor name="gps_back_sensor" type="navsat">
+      <always_on>true</always_on>
+      <update_rate>50.0</update_rate>
+      <topic>/gps/fix_back</topic>
+    </sensor>
   </gazebo>
 
   <gazebo>
-    <plugin name="gps_sensor_back" filename="libhector_gazebo_ros_gps.so">
-        <alwayson>true</alwayson>
-        <updaterate>50.0</updaterate>
-        <bodyname>gps_back_base</bodyname>
-        <frameId>gps_back_base</frameId>
-        <topicName>/gps/fix_back</topicName>
-        <velocityTopicName>/gps/fix_back_velocity</velocityTopicName>
-        <drift>0.001 0.001 0.001</drift>
-        <gaussianNoise>0.05 0.05 0.05</gaussianNoise>
-        <velocityDrift>0.001 0.001 0.001</velocityDrift>
-        <velocityGaussianNoise>0.5 0.5 0.5</velocityGaussianNoise>
+    <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(find jimmbot_description)/config/gz_ros2_control.yaml</parameters>
     </plugin>
   </gazebo>
 
-  <gazebo>
-    <plugin name="gazebo_ros_control" filename= "libgazebo_ros_control.so">
-    </plugin>
-  </gazebo>
+  <!-- NOTE: Gazebo Classic ROS plugins were removed for ROS 2 + Gazebo Sim bringup.
+       Equivalent ROS topic delivery is now expected through ros_gz_bridge.
+       Control interfaces now use ros2_control + gz_ros2_control plugin. -->
 
 </robot>

@@ -212,17 +212,6 @@
     <parent link="chassis"/>
     <child link="kinect_${postfix}_link"/>
   </joint>
-
-  <transmission name="chassis_to_kinect_${postfix}_trans">
-    <type>transmission_interface/SimpleTransmission</type>
-    <actuator name="chassis_to_kinect_${postfix}_motor">
-      <hardwareInterface>EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-    <joint name="chassis_to_kinect_${postfix}">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-    </joint>
-  </transmission>
 </xacro:macro>
 <xacro:kinect postfix="front" reflect="1"/>
 <xacro:kinect postfix="back" reflect="-1"/>
@@ -400,22 +389,59 @@
     <child link="wheel_${side}_${boggie}"/>
   </joint>
 
-  <transmission name="wheel_axis_${side}_${boggie}_to_wheel_${side}_${boggie}_trans">
-    <type>transmission_interface/SimpleTransmission</type>
-    <actuator name="wheel_axis_${side}_${boggie}_to_wheel_${side}_${boggie}_motor">
-      <hardwareInterface>EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-    <joint name="wheel_axis_${side}_${boggie}_to_wheel_${side}_${boggie}">
-      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-    </joint>
-  </transmission>
-
 </xacro:macro>
 <xacro:wheel side="front" boggie="left" across="-1" reflect="1" rotation="1"/>
 <xacro:wheel side="front" boggie="right" across="1" reflect="1" rotation="-1"/>
 <xacro:wheel side="back" boggie="left" across="1" reflect="1" rotation="1"/>
 <xacro:wheel side="back" boggie="right" across="-1" reflect="1" rotation="-1"/>
 <!-- end wheels -->
+
+<ros2_control name="jimmbot_system" type="system">
+  <hardware>
+    <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+  </hardware>
+
+  <joint name="chassis_to_kinect_front">
+    <command_interface name="position">
+      <param name="min">-0.523599</param>
+      <param name="max">0.523599</param>
+    </command_interface>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="chassis_to_kinect_back">
+    <command_interface name="position">
+      <param name="min">-0.523599</param>
+      <param name="max">0.523599</param>
+    </command_interface>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="wheel_axis_front_left_to_wheel_front_left">
+    <command_interface name="velocity"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="wheel_axis_front_right_to_wheel_front_right">
+    <command_interface name="velocity"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="wheel_axis_back_left_to_wheel_back_left">
+    <command_interface name="velocity"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="wheel_axis_back_right_to_wheel_back_right">
+    <command_interface name="velocity"/>
+    <state_interface name="position"/>
+    <state_interface name="velocity"/>
+  </joint>
+</ros2_control>
 
 </robot>
