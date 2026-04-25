@@ -1,14 +1,11 @@
 <?xml version="1.0"?>
 <robot name="jimmbot_simulation" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:arg name="enable_control" default="true" />
-
-  <!-- Kinect front -->
+  <!-- Kinect front (Gazebo Sim format) -->
   <gazebo reference="kinect_front_link">
-    <sensor type="depth" name="kinect_front">
+    <sensor name="kinect_front" type="camera">
       <always_on>true</always_on>
       <update_rate>20.0</update_rate>
-      <topic>/kinect_front/depth/image_raw</topic>
       <camera>
         <horizontal_fov>${60.0*3.14/180.0}</horizontal_fov>
         <image>
@@ -24,12 +21,11 @@
     </sensor>
   </gazebo>
 
-  <!-- Kinect back -->
+  <!-- Kinect back (Gazebo Sim format) -->
   <gazebo reference="kinect_back_link">
-    <sensor type="depth" name="kinect_back">
+    <sensor name="kinect_back" type="camera">
       <always_on>true</always_on>
       <update_rate>20.0</update_rate>
-      <topic>/kinect_back/depth/image_raw</topic>
       <camera>
         <horizontal_fov>${60.0*3.14/180.0}</horizontal_fov>
         <image>
@@ -51,16 +47,15 @@
       <always_on>true</always_on>
       <update_rate>50</update_rate>
       <visualize>false</visualize>
-      <topic>/imu</topic>
     </sensor>
   </gazebo>
 
   <gazebo reference="lidar_frame">
-    <sensor type="ray" name="ydlidar_sensor">
+    <sensor type="lidar" name="ydlidar_sensor">
+      <always_on>true</always_on>
       <update_rate>12.0</update_rate>
       <visualize>false</visualize>
-      <topic>/laserscan</topic>
-      <ray>
+      <lidar>
         <scan>
           <horizontal>
             <samples>720</samples>
@@ -79,7 +74,7 @@
           <mean>0.0</mean>
           <stddev>0.01</stddev>
         </noise>
-      </ray>
+      </lidar>
     </sensor>
   </gazebo>
 
@@ -87,7 +82,6 @@
     <sensor name="gps_front_sensor" type="navsat">
       <always_on>true</always_on>
       <update_rate>50.0</update_rate>
-      <topic>/gps/fix_front</topic>
     </sensor>
   </gazebo>
 
@@ -95,7 +89,6 @@
     <sensor name="gps_back_sensor" type="navsat">
       <always_on>true</always_on>
       <update_rate>50.0</update_rate>
-      <topic>/gps/fix_back</topic>
     </sensor>
   </gazebo>
 
@@ -103,16 +96,9 @@
     <plugin filename="ignition-gazebo-joint-state-publisher-system" name="ignition::gazebo::systems::JointStatePublisher"/>
   </gazebo>
 
-  <xacro:if value="$(arg enable_control)">
-    <gazebo>
-      <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-        <parameters>$(find jimmbot_controller)/config/gz_ros2_control.yaml</parameters>
-      </plugin>
-    </gazebo>
-  </xacro:if>
-
-  <!-- NOTE: Gazebo Classic ROS plugins were removed for ROS 2 + Gazebo Sim bringup.
-       Equivalent ROS topic delivery is now expected through ros_gz_bridge.
-       Control interfaces now use ros2_control + gz_ros2_control plugin. -->
+  <!-- NOTE: Control plugin is configured by jimmbot_gazebo launch files.
+       Gazebo Classic ROS plugins were removed for ROS 2 + Gazebo Sim bringup.
+       Equivalent ROS topic delivery is now handled through ros_gz_bridge.
+       Control interfaces use ros2_control + gz_ros2_control plugin configured in gazebo launches. -->
 
 </robot>

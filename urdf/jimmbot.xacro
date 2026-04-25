@@ -1,10 +1,8 @@
 <?xml version="1.0" ?>
 <robot name="jimmbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<xacro:arg name="enable_control" default="true" />
-
-<xacro:include filename="$(find jimmbot_description)/urdf/jimmbot_inertias.xacro" />
-<xacro:include filename="$(find jimmbot_description)/urdf/jimmbot.gazebo.xacro" />
+<xacro:include filename="jimmbot_inertias.xacro" />
+<xacro:include filename="jimmbot.gazebo.xacro" />
 
 <material name="jimmbot_chassis_gray">
   <color rgba="0.20 0.23 0.26 1.0"/>
@@ -215,13 +213,13 @@
     <visual>
       <origin rpy="0 0 1.5708" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://jimmbot_description/meshes/kinect/kinect.dae" scale="0.001 0.001 0.001" />
+        <mesh filename="package://jimmbot_description/meshes/kinect/kinect.dae" />
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://jimmbot_description/meshes/kinect/kinect.dae" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://jimmbot_description/meshes/kinect/kinect.dae"/>
       </geometry>
     </collision>
     <xacro:differential_inertial mass="0.5"/>
