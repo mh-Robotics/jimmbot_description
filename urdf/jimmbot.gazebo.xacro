@@ -99,6 +99,10 @@
     </sensor>
   </gazebo>
 
+  <gazebo>
+    <plugin filename="ignition-gazebo-joint-state-publisher-system" name="ignition::gazebo::systems::JointStatePublisher"/>
+  </gazebo>
+
   <xacro:if value="$(arg enable_control)">
     <gazebo>
       <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
