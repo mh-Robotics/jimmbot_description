@@ -3,9 +3,30 @@
 
   <!-- Kinect front (Gazebo Sim format) -->
   <gazebo reference="kinect_front_link">
-    <sensor name="kinect_front" type="camera">
+    <sensor name="kinect_front" type="depth_camera">
       <always_on>true</always_on>
       <update_rate>20.0</update_rate>
+      <frame_id>kinect_front_link</frame_id>
+      <topic>/kinect_front/depth/image_raw</topic>
+      <camera>
+        <horizontal_fov>${60.0*3.14/180.0}</horizontal_fov>
+        <image>
+          <format>R8G8B8</format>
+          <width>640</width>
+          <height>480</height>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>8.0</far>
+        </clip>
+      </camera>
+    </sensor>
+
+    <sensor name="kinect_front_rgb" type="camera">
+      <always_on>true</always_on>
+      <update_rate>20.0</update_rate>
+      <frame_id>kinect_front_link</frame_id>
+      <topic>/kinect_front/rgb/image_raw</topic>
       <camera>
         <horizontal_fov>${60.0*3.14/180.0}</horizontal_fov>
         <image>
@@ -23,9 +44,30 @@
 
   <!-- Kinect back (Gazebo Sim format) -->
   <gazebo reference="kinect_back_link">
-    <sensor name="kinect_back" type="camera">
+    <sensor name="kinect_back" type="depth_camera">
       <always_on>true</always_on>
       <update_rate>20.0</update_rate>
+      <frame_id>kinect_back_link</frame_id>
+      <topic>/kinect_back/depth/image_raw</topic>
+      <camera>
+        <horizontal_fov>${60.0*3.14/180.0}</horizontal_fov>
+        <image>
+          <format>R8G8B8</format>
+          <width>640</width>
+          <height>480</height>
+        </image>
+        <clip>
+          <near>0.05</near>
+          <far>8.0</far>
+        </clip>
+      </camera>
+    </sensor>
+
+    <sensor name="kinect_back_rgb" type="camera">
+      <always_on>true</always_on>
+      <update_rate>20.0</update_rate>
+      <frame_id>kinect_back_link</frame_id>
+      <topic>/kinect_back/rgb/image_raw</topic>
       <camera>
         <horizontal_fov>${60.0*3.14/180.0}</horizontal_fov>
         <image>
@@ -46,16 +88,20 @@
     <sensor name="imu_sensor" type="imu">
       <always_on>true</always_on>
       <update_rate>50</update_rate>
+      <frame_id>imu_base</frame_id>
       <visualize>false</visualize>
+      <topic>/imu</topic>
     </sensor>
   </gazebo>
 
   <gazebo reference="lidar_frame">
-    <sensor type="lidar" name="ydlidar_sensor">
+    <sensor type="gpu_lidar" name="ydlidar_sensor">
       <always_on>true</always_on>
       <update_rate>12.0</update_rate>
+      <frame_id>lidar_frame</frame_id>
       <visualize>false</visualize>
-      <lidar>
+      <topic>/laserscan</topic>
+      <ray>
         <scan>
           <horizontal>
             <samples>720</samples>
@@ -74,7 +120,7 @@
           <mean>0.0</mean>
           <stddev>0.01</stddev>
         </noise>
-      </lidar>
+      </ray>
     </sensor>
   </gazebo>
 
@@ -82,6 +128,7 @@
     <sensor name="gps_front_sensor" type="navsat">
       <always_on>true</always_on>
       <update_rate>50.0</update_rate>
+      <topic>/gps/fix_front</topic>
     </sensor>
   </gazebo>
 
@@ -89,11 +136,12 @@
     <sensor name="gps_back_sensor" type="navsat">
       <always_on>true</always_on>
       <update_rate>50.0</update_rate>
+      <topic>/gps/fix_back</topic>
     </sensor>
   </gazebo>
 
   <gazebo>
-    <plugin filename="ignition-gazebo-joint-state-publisher-system" name="ignition::gazebo::systems::JointStatePublisher"/>
+    <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher"/>
   </gazebo>
 
   <!-- NOTE: Control plugin is configured by jimmbot_gazebo launch files.
