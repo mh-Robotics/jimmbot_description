@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <robot name="jimmbot_simulation" xmlns:xacro="http://ros.org/wiki/xacro">
 
+  <xacro:arg name="gz_control_params_file" default="gz_control.yaml" />
+
   <!-- Kinect front (Gazebo Sim format) -->
   <gazebo reference="kinect_front_link">
     <sensor name="kinect_front" type="depth_camera">
@@ -141,12 +143,18 @@
   </gazebo>
 
   <gazebo>
-    <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher"/>
+    <plugin filename="gz-sim-joint-state-publisher-system"
+      name="gz::sim::systems::JointStatePublisher" />
   </gazebo>
 
-  <!-- NOTE: Control plugin is configured by jimmbot_gazebo launch files.
-       Gazebo Classic ROS plugins were removed for ROS 2 + Gazebo Sim bringup.
-       Equivalent ROS topic delivery is now handled through ros_gz_bridge.
-       Control interfaces use ros2_control + gz_ros2_control plugin configured in gazebo launches. -->
+  <gazebo>
+    <plugin filename="libgz_ros2_control-system.so"
+      name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(arg gz_control_params_file)</parameters>
+    </plugin>
+  </gazebo>
+
+  <!-- ROS 2 control interfaces are declared in jimmbot.xacro (ros2_control block).
+       This Gazebo Sim plugin exposes those interfaces through /controller_manager. -->
 
 </robot>

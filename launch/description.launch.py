@@ -8,6 +8,7 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
+    gz_control_params_file = LaunchConfiguration('gz_control_params_file')
     xacro_file = PathJoinSubstitution(
         [FindPackageShare('jimmbot_description'), 'urdf', 'jimmbot.xacro']
     )
@@ -16,6 +17,9 @@ def generate_launch_description():
             FindExecutable(name='xacro'),
             ' ',
             xacro_file,
+            ' ',
+            'gz_control_params_file:=',
+            gz_control_params_file,
         ]),
         value_type=str,
     )
@@ -25,6 +29,11 @@ def generate_launch_description():
             'use_sim_time',
             default_value='false',
             description='Use simulation clock if true.',
+        ),
+        DeclareLaunchArgument(
+            'gz_control_params_file',
+            default_value='gz_control.yaml',
+            description='Absolute path to gz_control controller parameters YAML.',
         ),
         Node(
             package='robot_state_publisher',
